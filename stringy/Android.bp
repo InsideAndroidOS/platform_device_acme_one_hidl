@@ -1,0 +1,32 @@
+cc_defaults {
+    name: "vendor.acme.one.stringy@1.0-defaults",
+    defaults: ["hidl_defaults"],
+    relative_install_path: "hw",
+    shared_libs: [
+        "libhidlbase",
+        "libhidltransport",
+        "libhwbinder",
+        "vendor.acme.one.stringy@1.0",
+    ],
+}
+
+cc_library {
+    name: "vendor.acme.one.stringy@1.0-impl",
+    defaults: ["vendor.acme.one.stringy@1.0-defaults"],
+    srcs: [
+        "Stringy.cpp",
+    ],
+    export_include_dirs: ["."],
+    vendor_available: true,
+}
+
+cc_binary {
+    name: "vendor.acme.one.stringy@1.0-service",
+    defaults: ["vendor.acme.one.stringy@1.0-defaults"],
+    init_rc: ["vendor.acme.one.stringy@1.0-service.rc"],
+    vintf_fragments: ["vendor.acme.one.stringy@1.0-service.xml"],
+    srcs: ["service.cpp"],
+    static_libs: ["vendor.acme.one.stringy@1.0-impl"],
+    proprietary: true,
+}
+
