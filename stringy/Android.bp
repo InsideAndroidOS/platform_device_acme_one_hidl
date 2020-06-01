@@ -6,6 +6,7 @@ cc_defaults {
         "libhidlbase",
         "libhidltransport",
         "libhwbinder",
+        "libutils",
         "vendor.acme.one.stringy@1.0",
     ],
 }
@@ -24,9 +25,8 @@ cc_binary {
     name: "vendor.acme.one.stringy@1.0-service",
     defaults: ["vendor.acme.one.stringy@1.0-defaults"],
     init_rc: ["vendor.acme.one.stringy@1.0-service.rc"],
-    vintf_fragments: ["vendor.acme.one.stringy@1.0-service.xml"],
     srcs: ["service.cpp"],
     static_libs: ["vendor.acme.one.stringy@1.0-impl"],
     proprietary: true,
+    vendor: true,
 }
-

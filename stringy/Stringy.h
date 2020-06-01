@@ -28,6 +28,7 @@ namespace V1_0 {
 namespace implementation {
 
 using ::android::hardware::hidl_array;
+using ::android::hardware::hidl_handle;
 using ::android::hardware::hidl_memory;
 using ::android::hardware::hidl_string;
 using ::android::hardware::hidl_vec;
@@ -35,7 +36,8 @@ using ::android::hardware::Return;
 using ::android::hardware::Void;
 using ::android::sp;
 
-struct Stringy : public IStringy {
+
+class Stringy : public IStringy {
     // Methods from ::vendor::acme::one::stringy::V1_0::IStringy follow.
     Return<void> reverse(const hidl_string& inputText, reverse_cb _hidl_cb) override;
     Return<uint32_t> hash(const hidl_string& inputText) override;

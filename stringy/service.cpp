@@ -13,18 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include <hidl/HidlSupport.h>
+#include <hidl/HidlTransportSupport.h>
+#include <utils/Errors.h>
+#include <utils/StrongPointer.h>
+
 #include "Stringy.h"
 
 using android::hardware::configureRpcThreadpool;
 using android::hardware::joinRpcThreadpool;
-using vendor::acme::one::stringy::V1_0::implementation::IStringy;
+using vendor::acme::one::stringy::V1_0::implementation::Stringy;
 using namespace android;
 
 int main() {
     configureRpcThreadpool(1, true);
 
-    sp<Stringy>  stringy = Stringy();
-    status_t status = stringy->registerAsService();
+    sp<Stringy>  stringy = new Stringy();
+    status_t status = stringy->registerAsService("default");
 
     if (status != OK) {
         return status;

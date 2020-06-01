@@ -26,13 +26,13 @@ namespace implementation {
 // Methods from ::vendor::acme::one::stringy::V1_0::IStringy follow.
 Return<void> Stringy::reverse(const hidl_string& inputText, reverse_cb _hidl_cb) {
     std::string  result;
-    std::string&  input = inputText;
+    std::string  input = static_cast<std::string>(inputText);
 
     callCount++;
 
     for (int i = input.size(); i > 0; i--) {
         const char&  in = input[i - 1];
-        result.append(in);
+        result.push_back(in);
     }
 
     hidl_string  cbResult(result);
@@ -41,38 +41,53 @@ Return<void> Stringy::reverse(const hidl_string& inputText, reverse_cb _hidl_cb)
 }
 
 Return<uint32_t> Stringy::hash(const hidl_string& inputText) {
-    uint32_t  result = 0;
+    uint32_t     result = 0;
+    std::string  input = static_cast<std::string>(inputText);
 
-    callCount++
+    callCount++;
 
-    for (int i = 0; i < inputText.size(); i++) {
-        result = (result << 8) ^ inputText[i];
+    for (int i = 0; i < input.size(); i++) {
+        result = (result << 8) ^ input[i];
     }
 
     return result;
 }
 
 Return<void> Stringy::split(const hidl_string& inputText, split_cb _hidl_cb) {
-    hidl_vec<StringyChar>  content();
+    std::vector<StringyChar>  content;
+    std::string               input = static_cast<std::string>(inputText);
 
     callCount++;
 
-    for (int i = 0; i < inputText.size(); i++) {
-        content.append(static_cast<int8_t>inputText[i]);
+    for (int i = 0; i < input.size(); i++) {
+        content.push_back(static_cast<int8_t>(input[i]));
     }
 
-    _hidl_cb(content);
+    hidl_vec<StringyChar>  result = hidl_vec(content);
+    _hidl_cb(result);
     return Void();
 }
 
 Return<void> Stringy::summarize(const hidl_string& inputText, summarize_cb _hidl_cb) {
-    StringySummary  summary();
+    StringySummary  summary;
 
     callCount++;
 
     summary.charCount = inputText.size();
-    summary.crc = this.hash(inputText);
+    summary.hash = hash(inputText);
     _hidl_cb(summary);
+    return Void();
+}
+
+Return<void> Stringy::debug(const hidl_handle &handle, const hidl_vec<hidl_string> & /*options*/) {
+    if (handle == nullptr || handle->numFds < 1 || handle->data[0] < 0) {
+        return Void();
+    }
+
+    int fd = handle->data[0];
+    dprintf(fd, "HIDL:\n");
+    dprintf(fd, "  Call count: %d\n", callCount);
+    fsync(fd);
     return Void();
 }
 
