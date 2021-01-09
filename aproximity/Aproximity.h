@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #pragma once
 
-#include <vendor/acme/one/stringy/1.0/IStringy.h>
+#include <vendor/acme/one/aproximity/1.0/IAproximity.h>
 #include <hidl/MQDescriptor.h>
 #include <hidl/Status.h>
+#include "dev/proximity_sensor.h"
 
 namespace vendor {
 namespace acme {
 namespace one {
-namespace stringy {
+namespace aproximity {
 namespace V1_0 {
 namespace implementation {
 
@@ -36,24 +36,30 @@ using ::android::hardware::Return;
 using ::android::hardware::Void;
 using ::android::sp;
 
+struct Aproximity : public IAproximity {
+    Aproximity();
+    ~Aproximity();
 
-class Stringy : public IStringy {
-    // Methods from ::vendor::acme::one::stringy::V1_0::IStringy follow.
-    Return<void> reverse(const hidl_string& inputText, reverse_cb _hidl_cb) override;
-    Return<uint32_t> hash(const hidl_string& inputText) override;
-    Return<void> split(const hidl_string& inputText, split_cb _hidl_cb) override;
-    Return<void> summarize(const hidl_string& inputText, summarize_cb _hidl_cb) override;
+    // Methods from ::vendor::acme::one::aproximity::V1_0::IAproximity follow.
+    Return<int32_t> poll(int32_t precision) override;
+    Return<void> get_details(get_details_cb _hidl_cb) override;
+    Return<void> summarize(summarize_cb _hidl_cb) override;
+    Return<void> reset() override;
 
     // Methods from ::android::hidl::base::V1_0::IBase follow.
-    Return<void> debug(const hidl_handle &handle, const hidl_vec<hidl_string> &options) override;
+    Return<void> debug(const hidl_handle &handle,
+                       const hidl_vec<hidl_string> &options) override;
 
 private:
-    int32_t callCount;
+    uint64_t            pollCallCount;
+    int64_t             lastPollCalledMs;
+    int                 fd;
+    proximity_params_t  params;
 };
 
 }  // namespace implementation
 }  // namespace V1_0
-}  // namespace stringy
+}  // namespace aproximity
 }  // namespace one
 }  // namespace acme
 }  // namespace vendor

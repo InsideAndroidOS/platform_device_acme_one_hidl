@@ -18,18 +18,18 @@
 #include <utils/Errors.h>
 #include <utils/StrongPointer.h>
 
-#include "Stringy.h"
+#include "Aproximity.h"
 
 using android::hardware::configureRpcThreadpool;
 using android::hardware::joinRpcThreadpool;
-using vendor::acme::one::stringy::V1_0::implementation::Stringy;
+using vendor::acme::one::aproximity::V1_0::implementation::Aproximity;
 using namespace android;
 
 int main() {
     configureRpcThreadpool(1, true);
 
-    sp<Stringy>  stringy = new Stringy();
-    status_t status = stringy->registerAsService("default");
+    sp<Aproximity>  aproximity = new Aproximity();
+    status_t status = aproximity->registerAsService("default");
 
     if (status != OK) {
         return status;

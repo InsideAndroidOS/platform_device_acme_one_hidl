@@ -1,4 +1,0 @@
-service vendor.stringy-hal-1-0 /vendor/bin/hw/vendor.acme.one.stringy@1.0-service
-    class hal
-    user system
-    group system
