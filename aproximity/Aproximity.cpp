@@ -43,7 +43,7 @@ Aproximity::Aproximity() {
 }
 
 Aproximity::~Aproximity() {
-    if (this->fd < 0) {
+    if (this->fd >= 0) {
         close_sensor(this->fd);
         this->fd = -1;
     }
